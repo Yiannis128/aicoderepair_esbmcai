@@ -1,0 +1,74 @@
+{
+  "ai_model": "gpt-3.5-turbo-16k",
+  "ai_custom": {},
+  "esbmc_path": "./esbmc",
+  "allow_successful": false,
+  "verifier_timeout": 130,
+  "esbmc_params": [
+      "--interval-analysis",
+      "--goto-unwind",
+      "--unlimited-goto-unwind",
+      "--incremental-bmc",
+      "--state-hashing",
+      "--add-symex-value-sets",
+      "--k-step",
+      "2",
+      "--floatbv",
+      "--unlimited-k-steps",
+      "--memory-leak-check",
+      "--context-bound",
+      "2",
+      "-Iincludes",
+      "-Inetworks"
+  ],
+  "esbmc_output_type": "vp",
+  "source_code_format": "single",
+  "llm_requests": {
+    "max_tries": 5,
+    "timeout": 60
+  },
+  "temp_auto_clean": false,
+  "temp_file_dir": "./temp",
+  "loading_hints": false,
+  "chat_modes": {
+    "user_chat": {
+      "temperature": 1.0,
+      "system": [],
+      "initial": "",
+      "set_solution": []
+    },
+    "generate_solution": {
+      "max_attempts": 5,
+      "temperature": 0.4,
+      "message_history": "reverse",
+      "scenarios": {},
+      "system": [
+        {
+          "role": "System",
+          "content": "You are an secure code generator that parses vulnerable source code, and output from a program called ESBMC, which contains vulnerability information about the source code. You should use the output from ESBMC to find the problem, and correct the source code. ESBMC is always correct. You shall add a NULL check for every heap allocation you make. From this point on, you can only reply in source code. You shall only output source code as whole. Reply OK if you understand."
+        },
+        {
+          "role": "AI",
+          "content": "OK"
+        },
+        {
+          "role": "Human",
+          "content": "The following text is the source code of the program, reply OK if you understand:\n\n```c\n{source_code}\n```"
+        },
+        {
+          "role": "AI",
+          "content": "OK"
+        },
+        {
+          "role": "Human",
+          "content": "The following text is the output of ESBMC, reply OK if you understand:\n\n```\n{esbmc_output}```"
+        },
+        {
+          "role": "AI",
+          "content": "OK"
+        }
+      ],
+      "initial": "Generate a correction for the source code provided. Show the code only. Do not reply with acknowledgements."
+    }
+  }
+}

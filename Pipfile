@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 ipykernel = "*"
+esbmc-ai = "==0.5.0rc4"
+pandas = "*"
+matplotlib = "*"
 
 [dev-packages]
 
